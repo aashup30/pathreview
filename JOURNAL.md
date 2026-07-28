@@ -21,7 +21,8 @@ I chose this issue because i've never done big codebase changes or fixes like th
 
 ## Week 8 — Reproduction & solution planning
 
-**Reproduction commit link:** [link to commit documenting the reproduced issue]
+**Reproduction commit link:** 
+https://github.com/aashup30/pathreview/commit/d88ea49a344288380243e2c6b349a0ef14bc7d7e
 
 **Reproduction summary:**
 I ran the existing unit tests in `tests/unit/test_resume_parser.py` and confirmed
