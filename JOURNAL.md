@@ -18,3 +18,25 @@ I chose this issue because i've never done big codebase changes or fixes like th
 **Setup confirmation:** [X] App runs locally at localhost:5173
 
 **Cohort ledger:** [X] Issue added to cohort ledger
+
+## Week 8 — Reproduction & solution planning
+
+**Reproduction commit link:** [link to commit documenting the reproduced issue]
+
+**Reproduction summary:**
+I ran the existing unit tests in `tests/unit/test_resume_parser.py` and confirmed
+`TestResumeParser::test_parse_single_column_resume_text`,
+`test_parse_resume_no_work_experience`, and `test_detect_sections` all fail because
+`_detect_sections()` returns an empty list (`assert 0 > 0 where 0 = len([])`). 
+
+I also ran `python -c "from ingestion.parsers.resume_parser import ResumeParser; r = ResumeParser(); res = r.parse('\n    John Smith\n    john@example.com\n\n    Education:\n    - B.S. Computer Science\n\n    Skills: Python\n'); print(res.metadata['detected_sections'])"` which gave me the result []
+
+To confirm the problem doesn't exist when there is no leading whitespace I ran `python -c "from ingestion.parsers.resume_parser import ResumeParser; r = ResumeParser(); res = r.parse('\nJohn Smith\njohn@example.com\n\nEducation:\n- B.S. Computer Science\n\nSkills: Python\n'); print(res.metadata['detected_sections'])"` which gave me the output ['Skills', 'Education'] confirming my theory.
+
+
+**PLAN.md link:** [link to PLAN.md in your fork]
+
+**Walkthrough video (recommended):** N/A
+
+**Blockers or open questions:**
+I think the only part i'm unsure about is  deciding on the exact fix whether its to get rid of the leading whitespace before matching, or change header regexes to allow optional leading whitespace. I need to confirm the change doesn't cause indented body text like bullets to be misdetected as section headers.
