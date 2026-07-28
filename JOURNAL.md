@@ -31,10 +31,11 @@ I ran the existing unit tests in `tests/unit/test_resume_parser.py` and confirme
 
 I also ran `python -c "from ingestion.parsers.resume_parser import ResumeParser; r = ResumeParser(); res = r.parse('\n    John Smith\n    john@example.com\n\n    Education:\n    - B.S. Computer Science\n\n    Skills: Python\n'); print(res.metadata['detected_sections'])"` which gave me the result []
 
-To confirm the problem doesn't exist when there is no leading whitespace I ran `python -c "from ingestion.parsers.resume_parser import ResumeParser; r = ResumeParser(); res = r.parse('\nJohn Smith\njohn@example.com\n\nEducation:\n- B.S. Computer Science\n\nSkills: Python\n'); print(res.metadata['detected_sections'])"` which gave me the output ['Skills', 'Education'] confirming my theory.
+To confirm the problem doesn't exist when there is no leading whitespace I ran `python -c "from ingestion.parsers.resume_parser import ResumePa/rser; r = ResumeParser(); res = r.parse('\nJohn Smith\njohn@example.com\n\nEducation:\n- B.S. Computer Science\n\nSkills: Python\n'); print(res.metadata['detected_sections'])"` which gave me the output ['Skills', 'Education'] confirming my theory.
 
 
-**PLAN.md link:** [link to PLAN.md in your fork]
+**PLAN.md link:** 
+https://github.com/aashup30/pathreview/blob/fix/147-resume-whitespace-detection/PLAN.md
 
 **Walkthrough video (recommended):** N/A
 
