@@ -129,18 +129,17 @@ class ResumeParser(BaseParser):
         text_lower = text.lower()
 
         for section in SECTION_HEADERS:
-            # Look for section header patterns
-            # BUG (#147): these patterns anchor the header to the start of a line
-            # (^ / \n) with no tolerance for leading whitespace. PDF-extracted and
-            # indented text (e.g. "    Education:") therefore never matches, so
-            # _detect_sections returns [] for such resumes. Reproduced by the
-            # failing tests test_detect_sections / test_parse_single_column_resume_text
-            # / test_parse_resume_no_work_experience in tests/unit/test_resume_parser.py.
+            # Allow optional leading whitespace before the header (#147). With
+            # re.MULTILINE, "^" matches the start of every line, and "\s*"
+            # tolerates the indentation added by PDF extraction and manually
+            # indented text (e.g. "    Education:"). The header must still span
+            # the whole line -- ending the line or being followed by ":", "|"
+            # or "-" -- so indented body text such as "Experienced in Python"
+            # is not misdetected as a section header.
+            escaped = re.escape(section)
             patterns = [
-                rf"^{re.escape(section)}\s*$",
-                rf"^{re.escape(section)}\s*[:|-]",
-                rf"\n{re.escape(section)}\s*$",
-                rf"\n{re.escape(section)}\s*[:|-]",
+                rf"^\s*{escaped}\s*$",
+                rf"^\s*{escaped}\s*[:|-]",
             ]
 
             for pattern in patterns:
