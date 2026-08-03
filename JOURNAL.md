@@ -76,7 +76,7 @@ failures in `_strip_markdown`, unrelated to issue #147.
 
 ### Check-in 2 (end of week)
 
-**PR link:** ⚠️ [paste your PR URL here after opening it]
+**PR link:** (https://github.com/ascherj/pathreview/pull/589)
 
 **Branch:** `fix/147-resume-whitespace-detection`
 
