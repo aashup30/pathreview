@@ -102,4 +102,59 @@ The three pre-existing tests that reproduced the bug now also pass.
 
 **Self-review confirmation:** [X] make check passes  [X] make test-unit passes
 
-**Draft PR feedback received from:** 
+**Draft PR feedback received from:** N/A
+
+## Week 10 — Iteration & reflection
+
+### Reviewer feedback
+
+**Feedback received:** [ ] Yes  [X] No 
+
+**Summary of feedback:**
+No review at the time of writing.
+
+**How you responded:**
+I did a final self-review of the PR instead of responding to feedback. I re-read the diff, confirmed `make check` and the resume-parser suite still pass, and made sure the PR description and test list were
+accurate.
+
+---
+
+### Reflection
+
+**What was harder than you expected?**
+The actual regex fix was small, but figuring out where the fix belonged
+and not break any other feature took up the most time. The hardest part
+was proving the fix didn't over-match like making sure indented body text like
+"Experienced in Python" wasn't mistaken for an "Experience" header. That
+I wrote the header patterns so they still had to occupy their own
+line (end-of-line or followed by `:`/`|`/`-`), which was more thinking than
+the one-line `^` → `^\s*` initial change suggested. 
+
+**What did you learn about working in a large codebase?**
+Contributing to someone else's production code is much more reading
+than writing. On my own projects I know the whole thing in my head but here I
+had to trace how `_detect_sections()` fed into `metadata['detected_sections']`
+and trust conventions I didn't write. I learned I should onlytouch one function and leave everything else alone.
+I also had to lean on the existing test suite as the benchmark for success in breaking anything else.
+Also distinguishing "my failure" from "a pre-existing failure" turned out to be a
+real challenge in a big codebase. Since not everything that was broken needed to be fixed, it was important to establish a baseline in test cases before making the fix and running the cases again.
+
+**How did AI tools help — and where did they fall short?**
+AI was most useful for orientation with help  quickly locating `_detect_sections()`,
+explaining what `re.MULTILINE` does with `^`, and helping me draft the
+edge-case tests (tab indentation, mixed indentation, empty input). It
+couldn't tell me whether real PDF extraction uses tabs vs. non-breaking
+spaces (`\xa0`), and it couldn't decide between stripping whitespace
+per line vs. anchoring with `^\s*` so that trade-off required me to reason
+ which approach was less likely to misdetect body text. I also had to
+verify every suggested test actually failed for the right reason before and
+passed after.
+
+**What would you do differently if you started over?**
+I'd establish the failing/passing baseline of the whole test suite on day one
+so I didn't waste time later untangling pre-existing failures from my own. \
+
+**What are you most proud of from this module?**
+I'm proud of my methodology with regards to the testing I did to verify my issue. I added seven targeted tests including the negative case where indented body text containing a
+header word must return `[]` so the fix is provably correct in both
+directions. That's the part that would give a maintainer confidence to merge it, and it's the habit I most want to carry forward.
